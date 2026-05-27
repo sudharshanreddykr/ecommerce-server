@@ -15,13 +15,32 @@ const COOKIE_OPTIONS = {
 export class UserController {
   async register(req: AuthenticatedRequest, res: Response) {
     try {
-      const { email, password, firstName, lastName } = req.body;
+      const {
+        email,
+        password,
+        firstName,
+        lastName,
+        phoneNumber,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+        postalCode,
+        country,
+      } = req.body;
 
       const user = await userService.createUser({
         email,
         password,
         firstName,
         lastName,
+        phoneNumber,
+        addressLine1,
+        addressLine2,
+        city,
+        state,
+        postalCode,
+        country,
       });
 
       res.status(201).json({
@@ -32,6 +51,13 @@ export class UserController {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          addressLine1: user.addressLine1,
+          addressLine2: user.addressLine2,
+          city: user.city,
+          state: user.state,
+          postalCode: user.postalCode,
+          country: user.country,
           role: user.role,
           createdAt: user.createdAt,
         },
@@ -72,7 +98,17 @@ export class UserController {
             email: user.email,
             firstName: user.firstName,
             lastName: user.lastName,
+            phoneNumber: user.phoneNumber,
+            addressLine1: user.addressLine1,
+            addressLine2: user.addressLine2,
+            city: user.city,
+            state: user.state,
+            postalCode: user.postalCode,
+            country: user.country,
             role: user.role,
+            isActive: user.isActive,
+            createdAt: user.createdAt,
+            updatedAt: user.updatedAt,
           },
         },
       });
@@ -154,7 +190,17 @@ export class UserController {
           email: user.email,
           firstName: user.firstName,
           lastName: user.lastName,
+          phoneNumber: user.phoneNumber,
+          addressLine1: user.addressLine1,
+          addressLine2: user.addressLine2,
+          city: user.city,
+          state: user.state,
+          postalCode: user.postalCode,
+          country: user.country,
           role: user.role,
+          isActive: user.isActive,
+          createdAt: user.createdAt,
+          updatedAt: user.updatedAt,
         },
       });
     } catch (error) {

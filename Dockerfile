@@ -1,23 +1,25 @@
-FROM node:18-alpine
+FROM node:18-alpine AS builder
 
 WORKDIR /app
 
-# Install production dependencies
+COPY package*.json ./
+RUN npm ci
+
+COPY . .
+RUN npm run build
+
+FROM node:18-alpine
+WORKDIR /app
+
 COPY package*.json ./
 RUN npm ci --only=production
 
-# Copy source code
-COPY dist ./dist
-
-# Create logs directory
+COPY --from=builder /app/dist ./dist
 RUN mkdir -p logs
 
-# Expose port
 EXPOSE 3000
 
-# Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=40s --retries=3 \
   CMD node -e "require('http').get('http://localhost:3000/health', (r) => {if (r.statusCode !== 200) throw new Error(r.statusCode)})"
 
-# Start application
-CMD ["node", "dist/index.ts"]
+CMD ["node", "dist/index.js"]

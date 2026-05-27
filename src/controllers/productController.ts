@@ -3,6 +3,7 @@ import { AuthenticatedRequest } from '../middleware/auth';
 import { productService } from '../services/productService';
 import { logger } from '../utils/logger';
 import { AppError } from '../utils/errors';
+import { commerceService } from '../services/commerceService';
 
 export class ProductController {
   async createProduct(req: AuthenticatedRequest, res: Response) {
@@ -32,11 +33,12 @@ export class ProductController {
     try {
       const { id } = req.params;
       const product = await productService.getProductById(id);
+      const decorated = await commerceService.decorateProduct(product!.toJSON() as any, req.user?.id);
 
       res.json({
         status: true,
         message: 'Product retrieved successfully',
-        data: product,
+        data: decorated,
       });
     } catch (error) {
       throw error;
@@ -56,11 +58,15 @@ export class ProductController {
         search,
         userId,
       });
+      const decorated = await commerceService.decorateProducts(
+        result.data.map((product) => product.toJSON() as any),
+        req.user?.id
+      );
 
       res.json({
         status: true,
         message: 'Products retrieved successfully',
-        data: result.data,
+        data: decorated,
         pagination: {
           total: result.total,
           page: result.page,
@@ -113,11 +119,15 @@ export class ProductController {
       }
 
       const products = await productService.getProductsByUserId(userId);
+      const decorated = await commerceService.decorateProducts(
+        products.map((product) => product.toJSON() as any),
+        req.user?.id
+      );
 
       res.json({
         status: true,
         message: 'Your products retrieved successfully',
-        data: products,
+        data: decorated,
       });
     } catch (error) {
       throw error;
@@ -129,12 +139,16 @@ export class ProductController {
       const threshold = parseInt(req.query.threshold as string) || 10;
 
       const products = await productService.getLowStockProducts(threshold);
+      const decorated = await commerceService.decorateProducts(
+        products.map((product) => product.toJSON() as any),
+        req.user?.id
+      );
 
       res.json({
         status: true,
         message: 'Low stock products retrieved successfully',
-        data: products,
-        count: products.length,
+        data: decorated,
+        count: decorated.length,
       });
     } catch (error) {
       throw error;

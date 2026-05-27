@@ -8,6 +8,13 @@ export interface IUser {
   password: string;
   firstName: string;
   lastName: string;
+  phoneNumber?: string | null;
+  addressLine1?: string | null;
+  addressLine2?: string | null;
+  city?: string | null;
+  state?: string | null;
+  postalCode?: string | null;
+  country?: string | null;
   role: 'admin' | 'user';
   isActive: boolean;
   createdAt?: Date;
@@ -20,6 +27,13 @@ class User extends Model<IUser> implements IUser {
   public password!: string;
   public firstName!: string;
   public lastName!: string;
+  public phoneNumber!: string | null;
+  public addressLine1!: string | null;
+  public addressLine2!: string | null;
+  public city!: string | null;
+  public state!: string | null;
+  public postalCode!: string | null;
+  public country!: string | null;
   public role!: 'admin' | 'user';
   public isActive!: boolean;
   public createdAt?: Date;
@@ -56,6 +70,34 @@ User.init(
     lastName: {
       type: DataTypes.STRING,
       allowNull: false
+    },
+    phoneNumber: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    addressLine1: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    addressLine2: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    city: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    state: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    postalCode: {
+      type: DataTypes.STRING,
+      allowNull: true
+    },
+    country: {
+      type: DataTypes.STRING,
+      allowNull: true
     },
     role: {
       type: DataTypes.ENUM('admin', 'user'),

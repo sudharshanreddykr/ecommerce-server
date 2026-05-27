@@ -14,6 +14,7 @@ import { errorHandler } from './middleware/errorHandler';
 import { requestValidator } from './middleware/requestValidator';
 import userRoutes from './routes/userRoutes';
 import productRoutes from './routes/productRoutes';
+import commerceRoutes from './routes/commerceRoutes';
 
 const app: Express = express();
 const PORT = process.env.PORT || 3000;
@@ -46,6 +47,7 @@ app.get('/health', (req, res) => {
 // ============ API Routes ============
 app.use(`${API_PREFIX}/users`, userRoutes);
 app.use(`${API_PREFIX}/products`, productRoutes);
+app.use(`${API_PREFIX}/commerce`, commerceRoutes);
 
 // ============ 404 Handler ============
 app.use((req, res) => {

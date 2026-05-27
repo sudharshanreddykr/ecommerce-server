@@ -9,6 +9,13 @@ interface CreateUserDTO {
   password: string;
   firstName: string;
   lastName: string;
+  phoneNumber?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
   role?: 'admin' | 'user';
   isActive?: boolean;
 }
@@ -18,6 +25,13 @@ interface UpdateUserDTO {
   firstName?: string;
   lastName?: string;
   password?: string;
+  phoneNumber?: string;
+  addressLine1?: string;
+  addressLine2?: string;
+  city?: string;
+  state?: string;
+  postalCode?: string;
+  country?: string;
   role?: 'admin' | 'user';
 }
 
@@ -44,6 +58,13 @@ export class UserService {
       password: data.password,
       firstName: data.firstName,
       lastName: data.lastName,
+      phoneNumber: data.phoneNumber,
+      addressLine1: data.addressLine1,
+      addressLine2: data.addressLine2,
+      city: data.city,
+      state: data.state,
+      postalCode: data.postalCode,
+      country: data.country,
       role: data.role || 'user',
       isActive: data.isActive !== false,
     });
