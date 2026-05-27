@@ -1,0 +1,38 @@
+import { Sequelize } from 'sequelize';
+import { logger } from '../utils/logger';
+
+const sequelize = new Sequelize(
+  process.env.DB_NAME || 'redis_crud_db',
+  process.env.DB_USER || 'postgres',
+  process.env.DB_PASSWORD || 'postgres',
+  {
+    host: process.env.DB_HOST || 'localhost',
+    port: parseInt(process.env.DB_PORT || '5432'),
+    dialect: 'postgres',
+    logging: (sql) => logger.debug(sql),
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000
+    },
+    define: {
+      timestamps: true,
+      underscored: true,
+      createdAt: 'created_at',
+      updatedAt: 'updated_at'
+    }
+  }
+);
+
+export const connectDatabase = async () => {
+  try {
+    await sequelize.authenticate();
+    await sequelize.sync({ alter: true });
+  } catch (error) {
+    logger.error('Database connection failed:', error);
+    throw error;
+  }
+};
+
+export default sequelize;

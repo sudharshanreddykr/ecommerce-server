@@ -1,0 +1,59 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15-alpine
+    container_name: redis_demo_postgres
+    environment:
+      POSTGRES_DB: redis_crud_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_INITDB_ARGS: "-c shared_preload_libraries=pg_stat_statements"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - redis-demo-network
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis_demo_redis
+    ports:
+      - "6379:6379"
+    command: redis-server --appendonly yes
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - redis-demo-network
+
+  pgadmin:
+    image: dpage/pgadmin4:latest
+    container_name: redis_demo_pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@example.com
+      PGADMIN_DEFAULT_PASSWORD: admin
+    ports:
+      - "5050:80"
+    depends_on:
+      - postgres
+    networks:
+      - redis-demo-network
+
+volumes:
+  postgres_data:
+  redis_data:
+
+networks:
+  redis-demo-network:
+    driver: bridge
